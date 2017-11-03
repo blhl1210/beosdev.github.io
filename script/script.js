@@ -1,8 +1,8 @@
 var isInv = false;
 var isRad = true;
 var ans = 0;
-const pi = 3.14159265358979;
-const e = 2.71828182845904523536;
+const pi = 3.14;
+const e = 2.718;
 var brackets = 0;
 var checked = ['(','asin(','acos(','atan(','sin(','cos(','tan(','ln(','sqrt(','log('];
 function set(num) {
@@ -110,13 +110,26 @@ function sine() {
     document.getElementById("display").value = eval(Math.sin(tempStore));
 
 }*/
+function getResult(Exp1) {
+    return math.eval(Exp1);
+}
+function check(res){
+    var str;
+    str = res.replace(/%/g, '/100');
+    return str;
+}
 function calculate() {
-    if (brackets !== 0) return 0;
     var AnsExp = document.getElementById("displayAns");
     var Exp = document.getElementById("display");
     var Exp1 = Exp.value;
-    AnsExp.value = Exp.value + "=";
-    var result = math.eval(Exp1);
+    while (brackets > 0){
+        Exp1+=')';
+        brackets--;
+    }
+    if (brackets !== 0) return 0;
+    AnsExp.value = Exp1 + "=";
+    Exp1 = check(Exp1);
+    var result = getResult(Exp1);
     Exp.value = result;
     ans = result;
 }

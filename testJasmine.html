@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+    <link rel="stylesheet" href="jasmine/jasmine.css" />
+    <script src="script/jquery-3.2.1.min.js"></script>
+    <script src="jasmine/jasmine.min.js"></script>
+    <script src="jasmine/jasmine-html.min.js"></script>
+    <script src="jasmine/boot.min.js"></script>
+    <script src="script/math.min.js"></script>
+    <script src="script/script.js"></script>
+    <script src="script/calculate.js"></script>
+</head>
+<script>
+    var expressions = [];
+    var results = [];
+  describe('calculatorSuite',function () {
+      var originalTimeout;
+      beforeEach(function (done) {
+          $.get('srcTest/expressions.txt', function(data) {
+              console.log(data);
+              expressions = data.split("\n");
+          });
+          $.get('srcTest/results.txt', function(data) {
+              console.log(data);
+              results = data.split("\n");
+          });
+          originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+          jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000;
+      });
+      it('should subtract two numbers together',function (done) {
+            console.log(expressions);
+            for (var i = 0;i<expressions.length;i++){
+                expect(getResult(expressions[i])).toEqual(parseInt(results[i]));
+            }
+      });
+      afterAll(function() {
+          jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
+      });
+  })
+//        it('should multiphy two numbers together',function () {
+//            expect(getResult('2*3')).toBe(5);
+//        });
+//        it('should divide two numbers together',function () {
+//            expect(getResult('2/3')).toBe(5);
+//        })
+</script>
+<body>
+<div id="main">
+</div>
+<br/>
+</body>
+</html>
