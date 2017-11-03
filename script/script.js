@@ -4,7 +4,8 @@ var ans = 0;
 const pi = 3.14;
 const e = 2.718;
 var brackets = 0;
-var checked = ['(','asin(','acos(','atan(','sin(','cos(','tan(','ln(','sqrt(','log('];
+var checked = ['(', 'asin(', 'acos(', 'atan(', 'sin(', 'cos(', 'tan(', 'ln(', 'sqrt(', 'log('];
+
 function set(num) {
     var exp = document.getElementById("display");
     if (checked.indexOf(num) !== -1) {
@@ -13,7 +14,7 @@ function set(num) {
     }
     if (num === ')')
         brackets--;
-    if (brackets>=0) {
+    if (brackets >= 0) {
         if (exp.value === '0')
             exp.value = num;
         else {
@@ -113,22 +114,57 @@ function sine() {
 function getResult(Exp1) {
     return math.eval(Exp1);
 }
-function check(res){
+
+function calLn(res) {
+    var index;
+    while (res.indexOf("ln(") !== -1) {
+        index = res.indexOf("ln(");
+        index += 2;
+        var count = 0;
+        var string = "";
+        for (var i = index; i < res.length; i++) {
+            if (res[i] === '(')
+                count++;
+            else if (res[i] === ')')
+                count--;
+            if (count === 0) {
+                string = res.substring(index + 1, i);
+                var sum = math.log(math.eval(string), e);
+                if (res[index - 3] - '0'>=0 && res[index - 3] - '0' <=9) {
+                    console.log("Hello");
+                    res = res.replace('ln(' + string + ')', "*" + sum.toString());
+                }
+                else
+                    res = res.replace('ln(' + string + ')', sum.toString());
+                console.log(res[index - 3]);
+                console.log(res);
+                console.log(sum);
+                break;
+            }
+        }
+    }
+    return res;
+}
+
+function check(res) {
     var str;
     str = res.replace(/%/g, '/100');
+    str = str.replace(/Ans/g, document.getElementById("displayAns").value.replace(/=/g, ""));
     return str;
 }
+
 function calculate() {
     var AnsExp = document.getElementById("displayAns");
     var Exp = document.getElementById("display");
     var Exp1 = Exp.value;
-    while (brackets > 0){
-        Exp1+=')';
+    while (brackets > 0) {
+        Exp1 += ')';
         brackets--;
     }
     if (brackets !== 0) return 0;
-    AnsExp.value = Exp1 + "=";
     Exp1 = check(Exp1);
+    AnsExp.value = Exp1 + "=";
+    Exp1 = calLn(Exp1);
     var result = getResult(Exp1);
     Exp.value = result;
     ans = result;
@@ -146,5 +182,5 @@ function ac() {
     brackets = 0;
     ans = 0;
     var elem = document.getElementById("display").value = "0";
-    document.getElementById("displayAns").value = "";
+    document.getElementById("displayAns").value = "0";
 }
